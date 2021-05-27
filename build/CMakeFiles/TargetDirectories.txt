@@ -1,0 +1,2 @@
+/mnt/c/Users/Lenovo/Desktop/Myproject/build/CMakeFiles/rebuild_cache.dir
+/mnt/c/Users/Lenovo/Desktop/Myproject/build/CMakeFiles/edit_cache.dir
