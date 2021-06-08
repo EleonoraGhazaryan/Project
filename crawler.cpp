@@ -1,42 +1,33 @@
 #include <iostream>
 #include <stdexcept>
 #include <regex.h>
-
-#include "easyhttpcpp/EasyHttp.h"
+#include <string>
+#include <curl/curl.h>
 #include "linkqueue.h"
 #include "repo_in_memory.hpp"
 #include "indexer.hpp"
 #include <sstream>
 #include <iterator>
 #include <unistd.h>
+static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *userp)
+{
+    ((std::string*)userp)->append((char*)contents, size * nmemb);
+    return size * nmemb;
+}
 std::string GetContents(std::string url){
-  try{
-	easyhttpcpp::EasyHttp::Builder httpClientBuilder;
-     
+  CURL *curl;
+  CURLcode res;
+  std::string readBuffer = "";
 
-    // create http client
-    easyhttpcpp::EasyHttp::Ptr pHttpClient = httpClientBuilder.build();
-    // create a new request and execute synchronously
-    easyhttpcpp::Request::Builder requestBuilder;
-    easyhttpcpp::Request::Ptr pRequest = requestBuilder.setUrl(url).build();
-    easyhttpcpp::Call::Ptr pCall = pHttpClient->newCall(pRequest);
-    easyhttpcpp::Response::Ptr pResponse = pCall->execute();
-    if (!pResponse->isSuccessful()){
-        std::cerr << "HTTP GET Error: (" << pResponse->getCode() << ")" << std::endl;
-        return "";
-    } else {
-        std::cout << "HTTP GET Success!" << std::endl;
-	    const std::string contentType = pResponse->getHeaderValue("Content-Type", "");
-		    if (Poco::isubstr<std::string>(contentType, "text/html") != std::string::npos){
-            return pResponse->getBody()->toString();
-        }
-            return "";
-    }
+  curl = curl_easy_init();
+  if(curl) {
+    curl_easy_setopt(curl, CURLOPT_URL, url);
+    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+    res = curl_easy_perform(curl);
+    curl_easy_cleanup(curl);
   }
-    catch(...){
-        std::cerr << "Error while getting contents";
-        return "";
-    }
+  return readBuffer;
 }
 
 const int MAX_MATCHES = 10;
