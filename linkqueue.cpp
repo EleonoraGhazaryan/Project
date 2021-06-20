@@ -10,7 +10,7 @@
 #define Trace(msg)
 #endif
 
-void * HandlerInvoker(void * param){
+void* HandlerInvoker(void * param){
     linkQueue* linkqueue = (linkQueue*) param;
     pthread_mutex_lock(&linkqueue-> mutex);
 
@@ -22,13 +22,13 @@ void * HandlerInvoker(void * param){
         linkqueue->_linkQueue.pop();
         Trace("Link removed from queue");
         pthread_mutex_unlock(&linkqueue->mutex);
-       for(auto i = linkqueue->_handlers.begin(); i != linkqueue->_handlers.end(); ++i)
+        for(auto i = linkqueue->_handlers.begin(); i != linkqueue->_handlers.end(); ++i)
         {
             (*i)(link);
         }
-    }
-         
+    }      
 }
+
 void* msgReceiver(void* arg)
 {
     Trace("Broadcaster thread started");
@@ -38,13 +38,12 @@ void* msgReceiver(void* arg)
         Trace("Waiting for link");
         pthread_cond_wait(&linkqueue->condvar, &linkqueue->mutex);
         Trace("Link received");
-       // std::cout << "Queue size" << linkQueue->_linkQueue.size() << std::endl;
+        // std::cout << "Queue size" << linkQueue->_linkQueue.size() << std::endl;
         //std::cout << "Handler size" << linkQueue->_handlers.size() << std::endl;
         pthread_t th;
-       pthread_create(&th, NULL, HandlerInvoker, arg);
+        pthread_create(&th, NULL, HandlerInvoker, arg);
         pthread_mutex_unlock(&linkqueue->mutex);
-       // std։։cout << "Broadcasting link" << link << std::endl;
-      
+        // std։։cout << "Broadcasting link" << link << std::endl;
     }
 }
 

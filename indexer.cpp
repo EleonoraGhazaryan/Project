@@ -1,6 +1,7 @@
 #include "indexer.hpp"
 #include <sstream>
 #include <iostream>
+
 void Indexer::AddSite(std::string url, std::string contents){
     //std::cout << "Indexing: " << url << std::endl;
     //Split the contents into words
@@ -28,6 +29,7 @@ void Indexer::AddSite(std::string url, std::string contents){
     }
    // std::cout << "Index size:  " << _index.size() << std::endl;
 }
+
 std::vector<std::string> Indexer::GetRelevantURLs(std::string word, unsigned int count){
     //Check if the word presents
     std::cout << "Index size:  " << _index.size() << std::endl;
@@ -38,3 +40,5 @@ std::vector<std::string> Indexer::GetRelevantURLs(std::string word, unsigned int
     }
     return matches;
 }
+
+Indexer indexer;

@@ -69,9 +69,9 @@ int run_server(){
 	buf[bytes - 2] = 0;
 
 	LOG(buf)
-     auto matches = indexer.GetRelevantURLs(buf);
-     std::cout << "________________________________________" << std::endl;
-     std::copy(matches.begin(), matches.end(), std::ostream_iterator<std::string>(std::cout, ",\n"));
+    auto matches = indexer.GetRelevantURLs(buf);
+    std::cout << "________________________________________" << std::endl;
+    std::copy(matches.begin(), matches.end(), std::ostream_iterator<std::string>(std::cout, ",\n"));
     for(auto i = matches.begin(); i != matches.end(); ++i){
         send(client_sock_fd, i->c_str(), i->size(), 0);
         send(client_sock_fd, "\r\n", 2, 0);
