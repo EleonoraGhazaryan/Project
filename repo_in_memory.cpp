@@ -6,6 +6,6 @@ void RepoInMemory::SaveLink(std::string link){
 void RepoInMemory::SaveSite(std::string url, std::string content){
     this->_sites[url] = content;
 }
-std::string RepoInMemory::GetSize(std::string url){
+std::string RepoInMemory::GetSite(std::string url){
     return this->_sites[url];
 }
